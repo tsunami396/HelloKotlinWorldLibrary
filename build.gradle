@@ -3,4 +3,44 @@ plugins {
     id 'com.android.application' version '7.3.0' apply false
     id 'com.android.library' version '7.3.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
+    id 'maven-publish'
+}
+
+ext {
+    versionName = "0.4"
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "HelloKotlinWorldLibrary"
+            url = 'https://maven.pkg.github.com/tsunami396/HelloKotlinWorldLibrary'
+
+            credentials {
+                def localProperties = new Properties()
+                localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+                username = localProperties.containsKey("com.github.user") ? localProperties.getProperty('com.github.user') : ''
+                password = localProperties.containsKey("com.github.token") ? localProperties.getProperty('com.github.token') : ''
+            }
+        }
+    }
+
+    publications {
+        GitHubPackages(MavenPublication) {
+            groupId "com.github.tsunami396"
+            artifactId "HelloKotlinWorldLibrary"
+            version versionName
+
+            pom {
+                url = 'https://github.com/tsunami396/HelloKotlinWorldLibrary'
+
+                licenses {
+                    license {
+                        name = 'Apache License Version 2.0'
+                    }
+                }
+            }
+        }
+    }
 }
